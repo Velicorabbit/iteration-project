@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import CardDeck from 'react-bootstrap/CardDeck';
 import Button from 'react-bootstrap/Button';
+import * as actions from '../actions/actions';
 
 const mapStateToProps = ({
   informationReducer: { lat, long, countryCode },
@@ -12,12 +13,18 @@ const ActivitiesView = (props) => {
   const [activitiesData, setActivitiesData] = useState([]);
   const [fetchedData, setFetchedData] = useState(false);
   const [currentActivities, setCurrentActivities] = useState([]); // DISCUSS
+  const userFavorites = useSelector(state => state.informationReducer.userFavorites)
+  const userId = useSelector(state => state.informationReducer.currentUser._id)
+  const dispatch = useDispatch()
+  //^^ CURRENTLY USER WILL BE DUMMY INFO,
 
   const countryCode = 'US';
   const DEFAULT_IMG = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80';
 
   const createActivities = (activitiesObject, category) => {
     return activitiesObject.map((activitiesInfo, i) => {
+      
+      const renderStar = checkIfFavorite(activitiesInfo.id);
       return (
         <Card key={`activities-card-${i}`} className={'activity-card'} style={{ 'width': '400px' }}>
           <div className="card-img-container">
@@ -37,15 +44,17 @@ const ActivitiesView = (props) => {
           </Card.Body>
           <Card.Footer>
             {/* change the value of whats going to go in here */}
-            {true ? (
+            {/*  */}
+            {renderStar ? (
               <img
-                onClick={addFavorite}
+                onClick={removeFavorite}
                 src="https://www.flaticon.com/svg/static/icons/svg/148/148841.svg"
                 height="20px"
                 id={activitiesInfo.id}
               ></img>
             ) : (
               <img
+                onClick={addFavorite}
                 src="https://www.flaticon.com/svg/static/icons/svg/149/149222.svg"
                 height="20px"
                 id={activitiesInfo.id}
@@ -73,6 +82,13 @@ const ActivitiesView = (props) => {
       .catch((err) => console.log('Activities fetch ERROR: ', err));
   };
 
+  const checkIfFavorite = (id) => {
+    for (let i = 0; i < userFavorites.length; i++){
+      if (userFavorites[i].id === id)  return true
+    }
+     return false
+  };
+
   const changeCategory = (category) => {
     return () => {
       fetchData(category);
@@ -80,6 +96,8 @@ const ActivitiesView = (props) => {
     };
   };
   
+  // Grabs yelp rest. ID from the favorite icon's id and sends it backend to be added
+  // to user favorites.
   const addFavorite = (e) => {
   console.log('here is your favorite: ', e.target.id)
   fetch('/', { // <-- get route to send to
@@ -88,10 +106,38 @@ const ActivitiesView = (props) => {
       "Content-Type": "Application/JSON"
     },
     body: JSON.stringify({
+      userId: userId,
       favoriteId: e.target.id,
     })
+  }).then(response => {
+    response.json()
+  }).then(userFavs => {
+    // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
+    console.log(userFavs);
+    dispatch(actions.updateFavorites({ uesrFavs }));
   })
 }
+
+const removeFavorite = (e) => {
+  console.log('Removing favorive: ', e.target.id)
+  fetch('/', {
+    method: 'DELETE',
+    headers: {
+      "Content-Type": "Application/JSON"
+    },
+    body: JSON.stringify({
+      userId: userId, 
+      favoriteId: e.target.id
+    })
+  }).then(response => {
+    response.json()
+  }).then(userFavs => {
+    // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
+    console.log(userFavs);
+    dispatch(actions.updateFavorites({ uesrFavs }));
+  })
+}
+
   useEffect(() => {
     if (!fetchedData) fetchData();
   }, []);
