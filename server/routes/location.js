@@ -6,12 +6,14 @@ const router = express.Router();
 const locationsController = require('../controllers/locationController');
 
 // location route to get location data
-router.get('/:location',
+router.get(
+  '/:location',
   locationsController.getLocationData,
   locationsController.getCountryCode,
   (req, res) => {
     const { latitude, longitude, countryCode } = res.locals;
     res.status(200).json({ latitude, longitude, countryCode });
-  });
+  }
+);
 
 module.exports = router;

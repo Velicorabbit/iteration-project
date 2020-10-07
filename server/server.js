@@ -10,6 +10,7 @@ const businessesRouter = require('./routes/businesses.js');
 const locationRouter = require('./routes/location.js');
 const newsRouter = require('./routes/news.js');
 const weatherRouter = require('./routes/weather.js');
+const favoritesRouter = require('./routes/favorites.js');
 
 // application-level middleware
 app.use(bodyParser.json());
@@ -20,6 +21,7 @@ app.use('/businesses', businessesRouter);
 app.use('/location', locationRouter);
 app.use('/news', newsRouter);
 app.use('/weather', weatherRouter);
+app.use('/favorites', favoritesRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/build', express.static(path.resolve(__dirname, '..build')));
@@ -29,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // catch-all route handler
-app.use('*', (req, res) => (res.sendStatus(404)));
+app.use('*', (req, res) => res.sendStatus(404));
 
 // global error handler
 app.use((err, req, res, next) => {
