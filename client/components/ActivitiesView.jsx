@@ -35,6 +35,23 @@ const ActivitiesView = (props) => {
               Location: {activitiesInfo.location.address1}
             </Card.Text>
           </Card.Body>
+          <Card.Footer>
+            {/* change the value of whats going to go in here */}
+            {true ? (
+              <img
+                onClick={addFavorite}
+                src="https://www.flaticon.com/svg/static/icons/svg/148/148841.svg"
+                height="20px"
+                id={activitiesInfo.id}
+              ></img>
+            ) : (
+              <img
+                src="https://www.flaticon.com/svg/static/icons/svg/149/149222.svg"
+                height="20px"
+                id={activitiesInfo.id}
+              ></img>
+            )}
+          </Card.Footer>
         </Card>
       );
     });
@@ -62,7 +79,19 @@ const ActivitiesView = (props) => {
       // setCurrentActivities(createActivities(activitiesData, category)); // DISCUSS
     };
   };
-
+  
+  const addFavorite = (e) => {
+  console.log('here is your favorite: ', e.target.id)
+  fetch('/', { // <-- get route to send to
+    method: 'POST',
+    headers: {
+      "Content-Type": "Application/JSON"
+    },
+    body: JSON.stringify({
+      favoriteId: e.target.id,
+    })
+  })
+}
   useEffect(() => {
     if (!fetchedData) fetchData();
   }, []);
@@ -70,6 +99,7 @@ const ActivitiesView = (props) => {
   useEffect(() => {
     fetchData();
   }, [props.city])
+
 
   if (!activitiesData) return null;
 
