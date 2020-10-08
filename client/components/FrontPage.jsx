@@ -66,6 +66,9 @@ const Search = (props) => {
             <button id='loginButton'>Login</button>
             {/* <Login /> */}
           </Link>
+          <Link to={'/favorites'}>
+            <button id="favoritesButton">Favorites</button>
+          </Link>
           <WeatherView city={props.city} />
         </div>
         <div className='search-wrapper'>

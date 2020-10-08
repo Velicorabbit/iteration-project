@@ -115,6 +115,17 @@ const ActivitiesView = (props) => {
     },
     body: JSON.stringify({
       yelp_id: e.target.id,
+      // name: e.target.name,
+      // address1: e.target.name
+      // city: 
+      // zip_code: 
+      // country:  
+      // review_count: 
+      // price: 
+      // category: 
+      // alias: 
+      // image_url: 
+      // yelp_url: 
     })
     }).then(response => {
       response.json()
@@ -138,7 +149,7 @@ const ActivitiesView = (props) => {
   }
 
 const removeFavorite = (e) => {
-  // console.log('Removing favorive: ', e.target.id)
+  console.log('Removing favorive: ', e.target.id)
   fetch(`/favorites/${userEmail}`, {
     method: 'DELETE',
     headers: {
@@ -154,6 +165,20 @@ const removeFavorite = (e) => {
       console.log(userFavs);
       dispatch(actions.updateFavorites(userFavs));
     })
+    .then(userFavs => {
+      fetch(`/favorites/${userEmail}`, {
+        headers: {
+          "content-type": 'Application/JSON'
+        }
+        }).then(response => {
+          return response.json()
+        }).then(data => {
+          dispatch(actions.updateFavorites(data));
+        })
+      // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
+      // setUserFavorite(true);
+      // TODO: CHANGE THE RENDERING with temp. 
+    })
 }
 
   useEffect(() => {
@@ -165,6 +190,7 @@ const removeFavorite = (e) => {
   }, [props.city]);
 
   useEffect(()=> {
+    fetchData();
     console.log('in useEffect for userFavorites', userFavorites)
   }, [userFavorites]);
 
