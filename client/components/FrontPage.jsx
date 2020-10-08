@@ -8,12 +8,14 @@ import ActivitiesView from './ActivitiesView.jsx';
 import FavoritesPage from './FavoritesPage.jsx';
 import DetailedWeather from './DetailedWeather.jsx';
 
-const mapDispatchToProps = dispatch => ({
-  addCity(data) { dispatch(actions.addCity(data)) }
+const mapDispatchToProps = (dispatch) => ({
+  addCity(data) {
+    dispatch(actions.addCity(data));
+  },
 });
 
 const mapStateToProps = ({
-  informationReducer: { lat, long, countryCode, city }
+  informationReducer: { lat, long, countryCode, city },
 }) => ({ lat, long, countryCode, city });
 
 const Search = (props) => {
@@ -22,80 +24,90 @@ const Search = (props) => {
 
   const handleChange = (event) => {
     setSearchValue(event.target.value);
-  }
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!searchValue) return alert('Please type in a city');
     setCity(sendLocation(searchValue));
     event.preventDefault();
-  }
+  };
 
   const sendLocation = (location) => {
     fetch(`/location/${location}`, {
       method: 'GET',
       headers: {
-        "Content-Type": "Application/JSON"
-      }
+        'Content-Type': 'Application/JSON',
+      },
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         setCity(searchValue);
         props.addCity({
           ...data,
-          city: searchValue
-        })
+          city: searchValue,
+        });
       })
-      .then(data => {
+      .then((data) => {
         setCity(searchValue);
         props.addCity({
           ...data,
-          city: searchValue
-        })
+          city: searchValue,
+        });
       })
-      .catch(err => console.log('Location fetch ERROR: ', err));
+      .catch((err) => console.log('Location fetch ERROR: ', err));
     return location;
-  }
+  };
 
   return (
-
     <div>
-      <div className='hero-container'>
-        <div className='top-container'>
-          <Link to={'/login'} className='loginButton'>
-            <button id='loginButton'>Login</button>
-            {/* <Login /> */}
-          </Link>
+      <div className="hero-container">
+        <div className="top-container">
+          <div class="nav-container">
+            <Link to={'/login'} className="nav">
+              <button className="nav">Login</button>
+              {/* <Login /> */}
+            </Link>
+            <Link to={'/favorites'} className="nav">
+              <button className="nav">Favorites</button>
+              {/* <Login /> */}
+            </Link>
+          </div>
           <WeatherView city={props.city} />
         </div>
-        <div className='search-wrapper'>
-          <h1><center>Find the best your city has to offer</center></h1>
-          <form onSubmit={handleSubmit} className='login-form'>
-            <input className='search-input' type="text" value={searchValue} onChange={handleChange} />
-            <input className='search-btn' type="submit" value="Search" />
+        <div className="search-wrapper">
+          <h1>
+            <center>Find the best your city has to offer</center>
+          </h1>
+          <form onSubmit={handleSubmit} className="login-form">
+            <input
+              className="search-input"
+              type="text"
+              value={searchValue}
+              onChange={handleChange}
+            />
+            <input className="search-btn" type="submit" value="Search" />
           </form>
         </div>
       </div>
-      <div className='main-content'>
+      <div className="main-content">
         <Switch>
-          <Route path = {'/favorites'}>
+          <Route path={'/favorites'}>
             <FavoritesPage />
           </Route>
 
-          <Route exact path ={'/'}>
+          <Route exact path={'/'}>
             <ActivitiesView city={props.city} />
             <NewsView city={props.city} />
           </Route>
 
-          <Route path ={'/detailed-weather'}>
-            <DetailedWeather/>
+          <Route path={'/detailed-weather'}>
+            <DetailedWeather />
           </Route>
-
         </Switch>
       </div>
     </div>
-
   );
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

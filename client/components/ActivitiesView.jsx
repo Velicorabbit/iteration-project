@@ -13,38 +13,47 @@ const ActivitiesView = (props) => {
   const [activitiesData, setActivitiesData] = useState([]);
   const [fetchedData, setFetchedData] = useState(false);
   const [currentActivities, setCurrentActivities] = useState([]); // DISCUSS
-  const userFavorites = useSelector(state => state.informationReducer.userFavorites, shallowEqual)
-  const userEmail = useSelector(state => state.informationReducer.currentUser.Email, shallowEqual)
-  console.log('Top of page with userFavorites ', userFavorites)
-  console.log('Top of page with userEmail ', userEmail)
-  // const [userFavorite, setUserFavorite] = useState(false); 
-  const dispatch = useDispatch()
+  const userFavorites = useSelector(
+    (state) => state.informationReducer.userFavorites,
+    shallowEqual
+  );
+  const userEmail = useSelector(
+    (state) => state.informationReducer.currentUser.Email,
+    shallowEqual
+  );
+  console.log('Top of page with userFavorites ', userFavorites);
+  console.log('Top of page with userEmail ', userEmail);
+  // const [userFavorite, setUserFavorite] = useState(false);
+  const dispatch = useDispatch();
   //^^ CURRENTLY USER WILL BE DUMMY INFO,
 
   const countryCode = 'US';
-  const DEFAULT_IMG = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80';
+  const DEFAULT_IMG =
+    'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80';
 
   const createActivities = (activitiesObject, category) => {
-    console.log('this is your activitiesObject: ', activitiesObject)
+    console.log('this is your useremail ', userEmail);
     return activitiesObject.map((activitiesInfo, i) => {
-      console.log('value of id ', activitiesInfo.id)
+      console.log('value of id ', activitiesInfo.id);
       const renderStar = checkIfFavorite(activitiesInfo.id, userFavorites);
       return (
-        <Card key={`activities-card-${i}`} className={'activity-card'} style={{ 'width': '400px' }}>
+        <Card
+          key={`activities-card-${i}`}
+          className={'activity-card'}
+          style={{ width: '400px' }}
+        >
           <div className="card-img-container">
-            <Card.Img className="card-img" variant="top" src={activitiesInfo.image_url} />
+            <Card.Img
+              className="card-img"
+              variant="top"
+              src={activitiesInfo.image_url}
+            />
           </div>
           <Card.Body>
             <Card.Title>{activitiesInfo.name}</Card.Title>
-            <Card.Text>
-              Rating: {activitiesInfo.rating}
-            </Card.Text>
-            <Card.Text>
-              Reviews: {activitiesInfo.review}
-            </Card.Text>
-            <Card.Text>
-              Location: {activitiesInfo.location.address1}
-            </Card.Text>
+            <Card.Text>Rating: {activitiesInfo.rating}</Card.Text>
+            <Card.Text>Reviews: {activitiesInfo.review}</Card.Text>
+            <Card.Text>Location: {activitiesInfo.location.address1}</Card.Text>
           </Card.Body>
           <Card.Footer>
             {/* change the value of whats going to go in here */}
@@ -76,10 +85,10 @@ const ActivitiesView = (props) => {
     fetch(`/businesses/${category}?lat=${props.lat}&lon=${props.long}`, {
       method: 'GET',
       headers: {
-        "Content-Type": "Application/JSON",
+        'Content-Type': 'Application/JSON',
       },
     })
-      .then((res) => (res.json()))
+      .then((res) => res.json())
       .then((data) => {
         setActivitiesData(data);
         setFetchedData(true);
@@ -89,12 +98,12 @@ const ActivitiesView = (props) => {
   };
 
   const checkIfFavorite = (yelp_id, uF) => {
-    for (let i = 0; i < uF.length; i++){
+    for (let i = 0; i < uF.length; i++) {
       if (uF[i].yelp_id === yelp_id) {
-        return true
-      } 
+        return true;
+      }
     }
-     return false
+    return false;
   };
 
   const changeCategory = (category) => {
@@ -103,58 +112,68 @@ const ActivitiesView = (props) => {
       // setCurrentActivities(createActivities(activitiesData, category)); // DISCUSS
     };
   };
-  
+
   // Grabs yelp rest. ID from the favorite icon's id and sends it backend to be added
   // to user favorites.
   const addFavorite = (e) => {
-  console.log('here is your favorite: ', e.target.id)
-  fetch(`/favorites/${userEmail}`, { 
-    method: 'POST',
-    headers: {
-      "Content-Type": "Application/JSON"
-    },
-    body: JSON.stringify({
-      yelp_id: e.target.id,
+    console.log('here is your favorite: ', e.target.id);
+    fetch(`/favorites/${userEmail}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'Application/JSON',
+      },
+      body: JSON.stringify({
+        yelp_id: e.target.id,
+      }),
     })
-    }).then(response => {
-      response.json()
-    }).then(userFavs => {
-      fetch(`/favorites/${userEmail}`, {
-        headers: {
-          "content-type": 'Application/JSON'
-        }
-        }).then(response => {
-          return response.json()
-        }).then(data => {
-          console.log('this is your data in addFavorites', data);
-          dispatch(actions.updateFavorites(data));
-        }).then(() => {
-          console.log('this is state in addFavorites after dispatch: ', userFavorites)
+      .then((response) => {
+        response.json();
+      })
+      .then((userFavs) => {
+        fetch(`/favorites/${userEmail}`, {
+          headers: {
+            'content-type': 'Application/JSON',
+          },
         })
-      // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
-      // setUserFavorite(true);
-      // TODO: CHANGE THE RENDERING with temp. 
-    })
-  }
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            console.log('this is your data in addFavorites', data);
+            dispatch(actions.updateFavorites(data));
+          })
+          .then(() => {
+            console.log(
+              'this is state in addFavorites after dispatch: ',
+              userFavorites
+            );
+          });
+        // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
+        // setUserFavorite(true);
+        // TODO: CHANGE THE RENDERING with temp.
+      });
+  };
 
-const removeFavorite = (e) => {
-  // console.log('Removing favorive: ', e.target.id)
-  fetch(`/favorites/${userEmail}`, {
-    method: 'DELETE',
-    headers: {
-      "Content-Type": "Application/JSON"
-    },
-    body: JSON.stringify({
-      yelp_id: e.target.id
+  const removeFavorite = (e) => {
+    // console.log('Removing favorive: ', e.target.id)
+    fetch(`/favorites/${userEmail}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'Application/JSON',
+      },
+      body: JSON.stringify({
+        yelp_id: e.target.id,
+      }),
     })
-    }).then(response => {
-      response.json()
-    }).then(userFavs => {
-      // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
-      console.log(userFavs);
-      dispatch(actions.updateFavorites(userFavs));
-    })
-}
+      .then((response) => {
+        response.json();
+      })
+      .then((userFavs) => {
+        // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
+        console.log(userFavs);
+        dispatch(actions.updateFavorites(userFavs));
+      });
+  };
 
   useEffect(() => {
     if (!fetchedData) fetchData();
@@ -164,14 +183,21 @@ const removeFavorite = (e) => {
     fetchData();
   }, [props.city]);
 
-  useEffect(()=> {
-    console.log('in useEffect for userFavorites', userFavorites)
+  useEffect(() => {
+    console.log('in useEffect for userFavorites', userFavorites);
   }, [userFavorites]);
 
   if (!activitiesData) return null;
 
   if (fetchedData) {
-    const CATEGORIES = ['restaurants', 'bars', 'climbing', 'health', 'bowling', 'fitness'];
+    const CATEGORIES = [
+      'restaurants',
+      'bars',
+      'climbing',
+      'health',
+      'bowling',
+      'fitness',
+    ];
     const buttonsArray = [];
 
     for (let i = 0; i < CATEGORIES.length; i += 1) {
@@ -184,27 +210,21 @@ const removeFavorite = (e) => {
           id={CATEGORIES[i]}
         >
           {CATEGORIES[i]}
-        </Button>,
+        </Button>
       );
     }
 
     return (
       <div className="activities-container">
         <h1 id="title">Local Activities Information</h1>
-        <div className="activities-buttons">
-          {buttonsArray}
-        </div>
+        <div className="activities-buttons">{buttonsArray}</div>
         <div className="cards-container">
-          <CardDeck>
-            {currentActivities}
-          </CardDeck>
+          <CardDeck>{currentActivities}</CardDeck>
         </div>
       </div>
     );
   } else {
-    return (
-      <h1 id="title">Fetching from database</h1>
-    );
+    return <h1 id="title">Fetching from database</h1>;
   }
 };
 
