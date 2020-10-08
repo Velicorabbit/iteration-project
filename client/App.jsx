@@ -19,12 +19,16 @@ const App = props => {
             <Login />
           </Route>
 
+          <Route exact path={'/favorites'}>
+            <FrontPage />
+          </Route>
+
           <Route exact path={'/'}>
             <FrontPage />
           </Route>
 
           <Route exact path={'/detailed-weather'}>
-            <DetailedWeather />
+            <FrontPage />
           </Route>
         </Switch>
       </div>

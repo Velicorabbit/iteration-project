@@ -14,3 +14,8 @@ export const addWeather = (data) => ({
   type: types.ADD_WEATHER,
   payload: data,
 });
+
+export const updateFavorites = (data) => ({
+  type: types.UPDATE_FAVORITES,
+  payload: data,
+});

@@ -1,10 +1,25 @@
-import * as types from "../constants/actionTypes";
+import * as types from '../constants/actionTypes';
 const initialState = {
   city: 'NYC',
   lat: '40.712775',
   long: '-74.005973',
   countryCode: 'US',
-  currentUser: '',
+  currentUser: {
+    _id: 1,
+    Email: 'test@test.com',
+    first_name: 'Justin',
+    last_name: 'Biebier',
+  },
+  userFavorites: [
+    {
+      yelp_id: 'XipQLDbyTl5tsLlyzAWzug',
+      Name: 'Jajaja Plantas Mexicana',
+    },
+    {
+      yelp_id: 'RemvTpxalDjSew5HwmNzUQ',
+      Name: 'The Dead Rabbit',
+    },
+  ],
   weatherDays: [],
 };
 
@@ -28,6 +43,12 @@ const informationReducer = (state = initialState, action) => {
       return {
         ...state,
         weatherDays: action.payload,
+      };
+    case types.UPDATE_FAVORITES:
+      console.log('action payload ', action.payload);
+      return {
+        ...state,
+        userFavorites: action.payload,
       };
     default:
       return state;

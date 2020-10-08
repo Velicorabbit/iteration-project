@@ -16,6 +16,7 @@ const NewsView = (props) => {
   const DEFAULT_IMG = 'https://joebalestrino.com/wp-content/uploads/2019/02/Marketplace-Lending-News.jpg';
 
   const createNewsArticles = (newsObject, category = 'business') => {
+    console.log('newsObject: ', newsObject);
     return newsObject[category].map((newsInfo, i) => {
       return (
         // TODO: transfer in-line styles to styles.css

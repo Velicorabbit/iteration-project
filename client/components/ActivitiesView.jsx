@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector, shallowEqual } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import CardDeck from 'react-bootstrap/CardDeck';
 import Button from 'react-bootstrap/Button';
@@ -13,8 +13,11 @@ const ActivitiesView = (props) => {
   const [activitiesData, setActivitiesData] = useState([]);
   const [fetchedData, setFetchedData] = useState(false);
   const [currentActivities, setCurrentActivities] = useState([]); // DISCUSS
-  const userFavorites = useSelector(state => state.informationReducer.userFavorites)
-  const userId = useSelector(state => state.informationReducer.currentUser._id)
+  const userFavorites = useSelector(state => state.informationReducer.userFavorites, shallowEqual)
+  const userEmail = useSelector(state => state.informationReducer.currentUser.Email, shallowEqual)
+  console.log('Top of page with userFavorites ', userFavorites)
+  console.log('Top of page with userEmail ', userEmail)
+  // const [userFavorite, setUserFavorite] = useState(false); 
   const dispatch = useDispatch()
   //^^ CURRENTLY USER WILL BE DUMMY INFO,
 
@@ -22,9 +25,10 @@ const ActivitiesView = (props) => {
   const DEFAULT_IMG = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80';
 
   const createActivities = (activitiesObject, category) => {
+    console.log('this is your activitiesObject: ', activitiesObject)
     return activitiesObject.map((activitiesInfo, i) => {
-      
-      const renderStar = checkIfFavorite(activitiesInfo.id);
+      console.log('value of id ', activitiesInfo.id)
+      const renderStar = checkIfFavorite(activitiesInfo.id, userFavorites);
       return (
         <Card key={`activities-card-${i}`} className={'activity-card'} style={{ 'width': '400px' }}>
           <div className="card-img-container">
@@ -47,7 +51,9 @@ const ActivitiesView = (props) => {
             {/*  */}
             {renderStar ? (
               <img
-                onClick={removeFavorite}
+                onClick={(e) => {
+                  removeFavorite(e);
+                }}
                 src="https://www.flaticon.com/svg/static/icons/svg/148/148841.svg"
                 height="20px"
                 id={activitiesInfo.id}
@@ -82,9 +88,11 @@ const ActivitiesView = (props) => {
       .catch((err) => console.log('Activities fetch ERROR: ', err));
   };
 
-  const checkIfFavorite = (id) => {
-    for (let i = 0; i < userFavorites.length; i++){
-      if (userFavorites[i].id === id)  return true
+  const checkIfFavorite = (yelp_id, uF) => {
+    for (let i = 0; i < uF.length; i++){
+      if (uF[i].yelp_id === yelp_id) {
+        return true
+      } 
     }
      return false
   };
@@ -100,42 +108,52 @@ const ActivitiesView = (props) => {
   // to user favorites.
   const addFavorite = (e) => {
   console.log('here is your favorite: ', e.target.id)
-  fetch('/', { // <-- get route to send to
+  fetch(`/favorites/${userEmail}`, { 
     method: 'POST',
     headers: {
       "Content-Type": "Application/JSON"
     },
     body: JSON.stringify({
-      userId: userId,
-      favoriteId: e.target.id,
+      yelp_id: e.target.id,
     })
-  }).then(response => {
-    response.json()
-  }).then(userFavs => {
-    // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
-    console.log(userFavs);
-    dispatch(actions.updateFavorites({ uesrFavs }));
-  })
-}
+    }).then(response => {
+      response.json()
+    }).then(userFavs => {
+      fetch(`/favorites/${userEmail}`, {
+        headers: {
+          "content-type": 'Application/JSON'
+        }
+        }).then(response => {
+          return response.json()
+        }).then(data => {
+          console.log('this is your data in addFavorites', data);
+          dispatch(actions.updateFavorites(data));
+        }).then(() => {
+          console.log('this is state in addFavorites after dispatch: ', userFavorites)
+        })
+      // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
+      // setUserFavorite(true);
+      // TODO: CHANGE THE RENDERING with temp. 
+    })
+  }
 
 const removeFavorite = (e) => {
-  console.log('Removing favorive: ', e.target.id)
-  fetch('/', {
+  // console.log('Removing favorive: ', e.target.id)
+  fetch(`/favorites/${userEmail}`, {
     method: 'DELETE',
     headers: {
       "Content-Type": "Application/JSON"
     },
     body: JSON.stringify({
-      userId: userId, 
-      favoriteId: e.target.id
+      yelp_id: e.target.id
     })
-  }).then(response => {
-    response.json()
-  }).then(userFavs => {
-    // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
-    console.log(userFavs);
-    dispatch(actions.updateFavorites({ uesrFavs }));
-  })
+    }).then(response => {
+      response.json()
+    }).then(userFavs => {
+      // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
+      console.log(userFavs);
+      dispatch(actions.updateFavorites(userFavs));
+    })
 }
 
   useEffect(() => {
@@ -144,8 +162,11 @@ const removeFavorite = (e) => {
 
   useEffect(() => {
     fetchData();
-  }, [props.city])
+  }, [props.city]);
 
+  useEffect(()=> {
+    console.log('in useEffect for userFavorites', userFavorites)
+  }, [userFavorites]);
 
   if (!activitiesData) return null;
 
