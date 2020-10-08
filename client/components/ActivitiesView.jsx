@@ -154,19 +154,6 @@ const ActivitiesView = (props) => {
           .then((data) => {
             // console.log('this is your data in addFavorites', data);
             dispatch(actions.updateFavorites(data));
-          })
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            console.log('this is your data in addFavorites', data);
-            dispatch(actions.updateFavorites(data));
-          })
-          .then(() => {
-            console.log(
-              'this is state in addFavorites after dispatch: ',
-              userFavorites
-            );
           });
         // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
         // setUserFavorite(true);

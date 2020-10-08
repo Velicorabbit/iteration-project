@@ -172,6 +172,9 @@ form {
 
 .signup-login-container {
   width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .signup-login-form {

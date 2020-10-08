@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as actions from '../actions/actions';
 import { Link, Switch, Route } from 'react-router-dom';
@@ -10,14 +10,18 @@ const FavoritesPage = () => {
   const favorites = useSelector(
     (state) => state.informationReducer.userFavorites
   );
+  const user = useSelector((state) => state.informationReducer.currentUser);
+  console.log('here are favorites', favorites);
+
   const cards = favorites.map((el, idx) => {
+    console.log('Favorite element information: ', el);
     return (
       <Card
         key={'favcards' + idx}
         style={{ width: '400px' }}
         className="favorite-card"
       >
-        <Card.Img variant="top" src={el.yelp_url} />
+        <Card.Img variant="top" src={el.image_url} />
         <Card.Header>{el.alias}</Card.Header>
         <Card.Body>
           <Card.Text>Address: {el.address1}</Card.Text>
