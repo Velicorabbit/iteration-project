@@ -10,11 +10,12 @@ const mapStateToProps = ({
 }) => ({ lat, long, countryCode, city });
 
 const ActivitiesView = (props) => {
-  useSelector(state => console.log('state at top ', state.informationReducer))
+  useSelector((state) =>
+    console.log('state at top ', state.informationReducer)
+  );
   const [activitiesData, setActivitiesData] = useState([]);
   const [fetchedData, setFetchedData] = useState(false);
   const [currentActivities, setCurrentActivities] = useState([]); // DISCUSS
-<<<<<<< HEAD
   const userFavorites = useSelector(
     (state) => state.informationReducer.userFavorites,
     shallowEqual
@@ -23,31 +24,19 @@ const ActivitiesView = (props) => {
     (state) => state.informationReducer.currentUser.Email,
     shallowEqual
   );
-  console.log('Top of page with userFavorites ', userFavorites);
-  console.log('Top of page with userEmail ', userEmail);
-  // const [userFavorite, setUserFavorite] = useState(false);
+  const loggedIn = useSelector(
+    (state) => state.informationReducer.isLoggedIn,
+    shallowEqual
+  );
   const dispatch = useDispatch();
-  //^^ CURRENTLY USER WILL BE DUMMY INFO,
-=======
-  const userFavorites = useSelector(state => state.informationReducer.userFavorites, shallowEqual)
-  const userEmail = useSelector(state => state.informationReducer.currentUser.Email, shallowEqual)
-  const loggedIn = useSelector(state => state.informationReducer.isLoggedIn, shallowEqual)
-  const dispatch = useDispatch()
->>>>>>> 933cbdb3b91afc7bc1661ac5756b67ffab8301fb
 
   const countryCode = 'US';
   const DEFAULT_IMG =
     'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80';
 
   const createActivities = (activitiesObject, category) => {
-<<<<<<< HEAD
-    console.log('this is your useremail ', userEmail);
+    console.log('loggedIn', loggedIn);
     return activitiesObject.map((activitiesInfo, i) => {
-      console.log('value of id ', activitiesInfo.id);
-=======
-    console.log('loggedIn', loggedIn)
-    return activitiesObject.map((activitiesInfo, i) => {
->>>>>>> 933cbdb3b91afc7bc1661ac5756b67ffab8301fb
       const renderStar = checkIfFavorite(activitiesInfo.id, userFavorites);
       return (
         <Card
@@ -68,8 +57,8 @@ const ActivitiesView = (props) => {
             <Card.Text>Reviews: {activitiesInfo.review}</Card.Text>
             <Card.Text>Location: {activitiesInfo.location.address1}</Card.Text>
           </Card.Body>
-          { loggedIn && 
-           <Card.Footer>
+          {loggedIn && (
+            <Card.Footer>
               {renderStar ? (
                 <img
                   onClick={(e) => {
@@ -88,7 +77,7 @@ const ActivitiesView = (props) => {
                 ></img>
               )}
             </Card.Footer>
-          }
+          )}
         </Card>
       );
     });
@@ -129,7 +118,6 @@ const ActivitiesView = (props) => {
   // Grabs yelp rest. ID from the favorite icon's id and sends it backend to be added
   // to user favorites.
   const addFavorite = (e) => {
-<<<<<<< HEAD
     console.log('here is your favorite: ', e.target.id);
     fetch(`/favorites/${userEmail}`, {
       method: 'POST',
@@ -138,6 +126,17 @@ const ActivitiesView = (props) => {
       },
       body: JSON.stringify({
         yelp_id: e.target.id,
+        // name: e.target.name,
+        // address1: e.target.name
+        // city:
+        // zip_code:
+        // country:
+        // review_count:
+        // price:
+        // category:
+        // alias:
+        // image_url:
+        // yelp_url:
       }),
     })
       .then((response) => {
@@ -148,41 +147,14 @@ const ActivitiesView = (props) => {
           headers: {
             'content-type': 'Application/JSON',
           },
-=======
-  console.log('here is your favorite: ', e.target.id)
-  fetch(`/favorites/${userEmail}`, { 
-    method: 'POST',
-    headers: {
-      "Content-Type": "Application/JSON"
-    },
-    body: JSON.stringify({
-      yelp_id: e.target.id,
-      // name: e.target.name,
-      // address1: e.target.name
-      // city: 
-      // zip_code: 
-      // country:  
-      // review_count: 
-      // price: 
-      // category: 
-      // alias: 
-      // image_url: 
-      // yelp_url: 
-    })
-    }).then(response => {
-      response.json()
-    }).then(userFavs => {
-      fetch(`/favorites/${userEmail}`, {
-        headers: {
-          "content-type": 'Application/JSON'
-        }
-        }).then(response => {
-          return response.json()
-        }).then(data => {
-          // console.log('this is your data in addFavorites', data);
-          dispatch(actions.updateFavorites(data));
->>>>>>> 933cbdb3b91afc7bc1661ac5756b67ffab8301fb
         })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            // console.log('this is your data in addFavorites', data);
+            dispatch(actions.updateFavorites(data));
+          })
           .then((response) => {
             return response.json();
           })
@@ -202,9 +174,8 @@ const ActivitiesView = (props) => {
       });
   };
 
-<<<<<<< HEAD
   const removeFavorite = (e) => {
-    // console.log('Removing favorive: ', e.target.id)
+    console.log('Removing favorive: ', e.target.id);
     fetch(`/favorites/${userEmail}`, {
       method: 'DELETE',
       headers: {
@@ -219,44 +190,26 @@ const ActivitiesView = (props) => {
       })
       .then((userFavs) => {
         // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
-        console.log(userFavs);
+        // console.log(userFavs);
         dispatch(actions.updateFavorites(userFavs));
+      })
+      .then((userFavs) => {
+        fetch(`/favorites/${userEmail}`, {
+          headers: {
+            'content-type': 'Application/JSON',
+          },
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            dispatch(actions.updateFavorites(data));
+          });
+        // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
+        // setUserFavorite(true);
+        // TODO: CHANGE THE RENDERING with temp.
       });
   };
-=======
-const removeFavorite = (e) => {
-  console.log('Removing favorive: ', e.target.id)
-  fetch(`/favorites/${userEmail}`, {
-    method: 'DELETE',
-    headers: {
-      "Content-Type": "Application/JSON"
-    },
-    body: JSON.stringify({
-      yelp_id: e.target.id
-    })
-    }).then(response => {
-      response.json()
-    }).then(userFavs => {
-      // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
-      // console.log(userFavs);
-      dispatch(actions.updateFavorites(userFavs));
-    })
-    .then(userFavs => {
-      fetch(`/favorites/${userEmail}`, {
-        headers: {
-          "content-type": 'Application/JSON'
-        }
-        }).then(response => {
-          return response.json()
-        }).then(data => {
-          dispatch(actions.updateFavorites(data));
-        })
-      // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
-      // setUserFavorite(true);
-      // TODO: CHANGE THE RENDERING with temp. 
-    })
-}
->>>>>>> 933cbdb3b91afc7bc1661ac5756b67ffab8301fb
 
   useEffect(() => {
     if (!fetchedData) fetchData();
@@ -266,14 +219,9 @@ const removeFavorite = (e) => {
     fetchData();
   }, [props.city]);
 
-<<<<<<< HEAD
   useEffect(() => {
-    console.log('in useEffect for userFavorites', userFavorites);
-=======
-  useEffect(()=> {
     fetchData();
     // console.log('in useEffect for userFavorites', userFavorites)
->>>>>>> 933cbdb3b91afc7bc1661ac5756b67ffab8301fb
   }, [userFavorites]);
 
   if (!activitiesData) return null;

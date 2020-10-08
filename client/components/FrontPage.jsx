@@ -61,31 +61,21 @@ const Search = (props) => {
 
   return (
     <div>
-<<<<<<< HEAD
       <div className="hero-container">
         <div className="top-container">
-          <div class="nav-container">
-            <Link to={'/login'} className="nav">
+          <div className="nav-container">
+            <Link to={'/'}>
+              <button className="nav">Home</button>
+            </Link>
+            <Link to={'/favorites'}>
+              <button className="nav">Favorites</button>
+            </Link>
+            <Link to={'/login'} className="loginButton">
               <button className="nav">Login</button>
               {/* <Login /> */}
             </Link>
-            <Link to={'/favorites'} className="nav">
-              <button className="nav">Favorites</button>
-              {/* <Login /> */}
-            </Link>
           </div>
-=======
-      <div className='hero-container'>
-        <div className='top-container'>
-          <Link to={'/login'} className='loginButton'>
-            <button id='loginButton'>Login</button>
-            {/* <Login /> */}
-          </Link>
-          <Link to={'/favorites'}>
-            <button id="favoritesButton">Favorites</button>
-          </Link>
->>>>>>> 933cbdb3b91afc7bc1661ac5756b67ffab8301fb
-          <WeatherView city={props.city} />
+          <WeatherView className="weather-view" city={props.city} />
         </div>
         <div className="search-wrapper">
           <h1>
