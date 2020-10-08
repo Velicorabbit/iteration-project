@@ -6,7 +6,7 @@ const favoritesController = require('../controllers/favoritesController');
 
 // favorites router for get requests
 router.get('/:user_email', favoritesController.getFavorites, (req, res) => {
-  res.send(res.locals.favorites);
+  res.json(res.locals.favorites);
 });
 
 // favorites router for post requests
