@@ -75,6 +75,7 @@ app.get(
     // res.send(req.user);
     // res.render('/', { status: req.user })
     res.redirect('/');
+    // res.status(200).json(req.user);
   }
 );
 
