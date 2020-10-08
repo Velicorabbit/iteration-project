@@ -5,12 +5,7 @@ const initialState = {
   long: '-74.005973',
   countryCode: 'US',
   isLoggedIn: false,
-  currentUser: {
-    _id: 1,
-    Email: 'test@test.com',
-    first_name: 'Justin',
-    last_name: 'Biebier',
-  },
+  currentUser: 'bbrower1293@gmail.com',
   userFavorites: [],
   weatherDays: [],
 };
@@ -28,8 +23,8 @@ const informationReducer = (state = initialState, action) => {
     case types.ADD_USER:
       return {
         ...state,
-        isLoggedIn: true,
         currentUser: action.payload,
+        isLoggedIn: true,
       };
     case types.ADD_WEATHER:
       console.log('action payload ', action.payload);
@@ -46,6 +41,6 @@ const informationReducer = (state = initialState, action) => {
     default:
       return state;
   }
-}
+};
 
 export default informationReducer;

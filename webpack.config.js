@@ -74,6 +74,10 @@ module.exports = {
         target: 'http://localhost:5000',
         secure: false,
       },
+      '/login/**': {
+        target: 'http://localhost:5000',
+        secure: false,
+      },
     },
   },
 };
