@@ -15,6 +15,7 @@ const informationReducer = (state = initialState, action) => {
     case types.ADD_CITY:
       console.log('action payload ', action.payload);
       return {
+        ...state,
         city: action.payload.city,
         lat: action.payload.latitude,
         long: action.payload.longitude,

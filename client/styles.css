@@ -1,18 +1,26 @@
 * {
   box-sizing: border-box;
-  margin:0;
-  padding:0;
+  margin: 0;
+  padding: 0;
   text-decoration: none;
 }
 
 .main-content {
   width: 100%;
   padding: 30px;
-  
 }
 
 .news-container {
-	margin: 50px 0px;
+  margin: 50px 0px;
+}
+
+.fav-cards {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.favorite-card {
+  margin: 5px;
 }
 
 .item-wrapper {
@@ -32,17 +40,17 @@
   font-size: 12px;
   margin-top: 5px;
   box-shadow: 2px 2px #444444;
-
 }
 
-.item-wrapper img{
+.item-wrapper img {
   height: 150px;
   width: 100%;
   display: flex;
   border: 1px solid black;
 }
 
-.item-wrapper p, strong{
+.item-wrapper p,
+strong {
   margin: 0;
   font-size: 11px;
   height: auto;
@@ -61,23 +69,23 @@
   display: flex;
   flex-direction: column;
   border: 1px solid black;
-  border-radius: 2%;
+  border-radius: 5px;
   box-shadow: 2px 2px #444444;
-  margin-right: 5px;
+  margin: 5px;
   background-color: rgba(255, 255, 255, 0.8);
 }
 
-.weather-wrapper img{
+.weather-wrapper img {
   margin: 0px;
   align-self: center;
 }
 
-.weather-wrapper p{
+.weather-wrapper p {
   width: auto;
   justify-content: center;
 }
 
-.weather-wrapper strong{
+.weather-wrapper strong {
   margin: 5px 0px 0px 0px;
 }
 
@@ -86,7 +94,7 @@
   justify-content: space-between;
 }
 
-.temp-wrapper p{
+.temp-wrapper p {
   margin: 0px 5px 5px 5px;
 }
 
@@ -108,7 +116,7 @@
 
 .hero-container {
   background-image: url('https://www.developmentguild.com/assets/nyc-banner-night.jpg');
-  /* background-size: auto; */
+  /* background-size: contain; */
   display: flex;
   flex-direction: column;
   height: 120%;
@@ -121,30 +129,42 @@
 
 .search-input {
   width: 80%;
-  min-width:300px;
+  min-width: 300px;
   height: 30px;
   margin-bottom: 10px;
+}
+
+.search-input:focus {
+  outline: none;
 }
 
 .search-btn {
-  width: 50px;
-  height: 30px;
-  margin-bottom: 10px;
-  font-size:13px;
+  /* margin-bottom: 10px; */
+  padding: 6px;
+  font-size: 13px;
   font-weight: bold;
+  /* border: none;
+  background-color: white;
+  border-radius: 5px; */
 }
 
-.search-wrapper h1{
+.search-wrapper h1 {
   font-size: 27px;
   margin-bottom: 10px;
 }
 
 .search-wrapper {
-  background: rgba(255, 255, 255, 0.7);
-  padding-top: 15px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 15px;
+  margin-bottom: 20px;
   border-radius: 3px;
-  width:24%;
-  min-width:450px;
+  width: 24%;
+  min-width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -152,6 +172,9 @@
 
 .signup-login-container {
   width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .signup-login-form {
@@ -159,49 +182,56 @@
 }
 
 .card-img-container {
-	height: 250px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	overflow: hidden;
-	background: #dfdfdf;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: #dfdfdf;
 }
 
 .card-img {
-	height: 100%;
+  height: 100%;
 }
 
 #title {
   font-size: 27px;
 }
 
-.loginButton {
-  align-self: flex-start;
-}
-
-#loginButton {
-  margin:5px;
-  width: 50px;
+.nav {
+  margin: 5px;
+  width: auto;
   height: 30px;
-  margin-bottom: 10px;
-  font-size:13px;
+  padding: 5px;
+  padding-bottom: 4px;
+  font-size: 13px;
   font-weight: bold;
-  background-color: Transparent;
-  transition: color, background-color;
-  border-radius:5px; 
+  background-color: rgba(255, 255, 255, 0.8);
+  /* transition: color, background-color; */
+  border: none;
+  border-radius: 5px;
+}
+.nav:focus {
+  outline: none;
 }
 
-#loginButton:hover {
-  color:white;
-  background-color:gray;
+.nav:hover {
+  text-decoration: underline;
+}
+
+.nav-container {
+  display: flex;
+  flex-direction: row;
 }
 
 .top-container {
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
   width: 100%;
 }
+
 /* 
 .activity-card {
   width: 18%;

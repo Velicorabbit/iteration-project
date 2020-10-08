@@ -6,10 +6,13 @@ import Button from 'react-bootstrap/Button';
 import * as actions from '../actions/actions';
 
 const mapStateToProps = ({
-  informationReducer: { lat, long, countryCode },
-}) => ({ lat, long, countryCode });
+  informationReducer: { lat, long, countryCode, city },
+}) => ({ lat, long, countryCode, city });
 
 const ActivitiesView = (props) => {
+  useSelector((state) =>
+    console.log('state at top ', state.informationReducer)
+  );
   const [activitiesData, setActivitiesData] = useState([]);
   const [fetchedData, setFetchedData] = useState(false);
   const [currentActivities, setCurrentActivities] = useState([]);
@@ -17,12 +20,17 @@ const ActivitiesView = (props) => {
     (state) => state.informationReducer.userFavorites,
     shallowEqual
   );
+
+  const loggedIn = useSelector((state) => state.informationReducer.isLoggedIn);
+
   const userEmail = useSelector(
     (state) => state.informationReducer.currentUser.Email,
     shallowEqual
   );
+
   console.log('Top of page with userFavorites ', userFavorites);
   console.log('Top of page with userEmail ', userEmail);
+
   // const [userFavorite, setUserFavorite] = useState(false);
   const dispatch = useDispatch();
   //^^ CURRENTLY USER WILL BE DUMMY INFO,
@@ -32,9 +40,8 @@ const ActivitiesView = (props) => {
     'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80';
 
   const createActivities = (activitiesObject, category) => {
-    console.log('this is your activitiesObject: ', activitiesObject);
     return activitiesObject.map((activitiesInfo, i) => {
-      // console.log('value of id ', activitiesInfo.id)
+      console.log('value of id ', activitiesInfo);
       const renderStar = checkIfFavorite(activitiesInfo.id, userFavorites);
       return (
         <Card
@@ -51,15 +58,9 @@ const ActivitiesView = (props) => {
           </div>
           <Card.Body>
             <Card.Title>{activitiesInfo.name}</Card.Title>
-            <Card.Text>
-              Rating: {activitiesInfo.rating}
-            </Card.Text>
-            <Card.Text>
-              Reviews: {activitiesInfo.review_count}
-            </Card.Text>
-            <Card.Text>
-              Location: {activitiesInfo.location.address1}
-            </Card.Text>
+            <Card.Text>Rating: {activitiesInfo.rating}</Card.Text>
+            <Card.Text>Reviews: {activitiesInfo.review_count}</Card.Text>
+            <Card.Text>Location: {activitiesInfo.location.address1}</Card.Text>
           </Card.Body>
           <Card.Footer>
             {/* change the value of whats going to go in here */}
@@ -81,6 +82,7 @@ const ActivitiesView = (props) => {
                 data-price={activitiesInfo.price}
                 data-image_url={activitiesInfo.image_url}
                 data-yelp_url={activitiesInfo.yelp_url}
+                // data-display_phone={activitiesInfo.display_phone}                      //ADD THE COLUMN TO THE DATABASE
               ></img>
             ) : (
               <img
@@ -97,6 +99,7 @@ const ActivitiesView = (props) => {
                 data-price={activitiesInfo.price}
                 data-image_url={activitiesInfo.image_url}
                 data-yelp_url={activitiesInfo.yelp_url}
+                // data-display_phone={activitiesInfo.display_phone}                       //ADD THE COLUMN TO THE DATABASE
               ></img>
             )}
           </Card.Footer>
@@ -147,7 +150,7 @@ const ActivitiesView = (props) => {
         'Content-Type': 'Application/JSON',
       },
       body: JSON.stringify({
-        yelp_id: e.target.id, // HOW TO PASS IN THE ACTIVITY OBJECT HERE?
+        yelp_id: e.target.id,
         address1: e.target.getAttribute('data-address1'),
         name: e.target.getAttribute('data-name'),
         city: e.target.getAttribute('data-city'),
@@ -172,14 +175,8 @@ const ActivitiesView = (props) => {
             return response.json();
           })
           .then((data) => {
-            console.log('this is your data in addFavorites', data);
+            // console.log('this is your data in addFavorites', data);
             dispatch(actions.updateFavorites(data));
-          })
-          .then(() => {
-            console.log(
-              'this is state in addFavorites after dispatch: ',
-              userFavorites
-            );
           });
         // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
         // setUserFavorite(true);
@@ -204,6 +201,15 @@ const ActivitiesView = (props) => {
       .then((userFavs) => {
         // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
         console.log(userFavs);
+        dispatch(actions.updateFavorites(userFavs));
+      })
+
+      .then((response) => {
+        response.json();
+      })
+      .then((userFavs) => {
+        // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
+        // console.log(userFavs);
         dispatch(actions.updateFavorites(userFavs));
       })
       .then((userFavs) => {
@@ -234,7 +240,6 @@ const ActivitiesView = (props) => {
 
   useEffect(() => {
     fetchData();
-    console.log('in useEffect for userFavorites', userFavorites);
   }, [userFavorites]);
 
   if (!activitiesData) return null;
