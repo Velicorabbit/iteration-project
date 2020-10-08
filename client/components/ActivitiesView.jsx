@@ -20,13 +20,17 @@ const ActivitiesView = (props) => {
     (state) => state.informationReducer.userFavorites,
     shallowEqual
   );
+
   const loggedIn = useSelector((state) => state.informationReducer.isLoggedIn);
+
   const userEmail = useSelector(
     (state) => state.informationReducer.currentUser.Email,
     shallowEqual
   );
-  // console.log('Top of page with userFavorites ', userFavorites);
-  // console.log('Top of page with userEmail ', userEmail);
+
+  console.log('Top of page with userFavorites ', userFavorites);
+  console.log('Top of page with userEmail ', userEmail);
+
   // const [userFavorite, setUserFavorite] = useState(false);
   const dispatch = useDispatch();
   //^^ CURRENTLY USER WILL BE DUMMY INFO,
@@ -36,7 +40,6 @@ const ActivitiesView = (props) => {
     'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80';
 
   const createActivities = (activitiesObject, category) => {
-    console.log('loggedIn', loggedIn);
     return activitiesObject.map((activitiesInfo, i) => {
       console.log('value of id ', activitiesInfo);
       const renderStar = checkIfFavorite(activitiesInfo.id, userFavorites);
@@ -157,7 +160,6 @@ const ActivitiesView = (props) => {
         price: e.target.getAttribute('data-price'),
         image_url: e.target.getAttribute('data-image_url'),
         yelp_url: e.target.getAttribute('data-yelp_url'),
-        // display_phone: e.target.getAttribute('data-display_phone'),                      //ADD THE COLUMN TO THE DATABASE
       }),
     })
       .then((response) => {
@@ -201,6 +203,7 @@ const ActivitiesView = (props) => {
         console.log(userFavs);
         dispatch(actions.updateFavorites(userFavs));
       })
+
       .then((response) => {
         response.json();
       })
@@ -237,7 +240,6 @@ const ActivitiesView = (props) => {
 
   useEffect(() => {
     fetchData();
-    // console.log('in useEffect for userFavorites', userFavorites)
   }, [userFavorites]);
 
   if (!activitiesData) return null;
