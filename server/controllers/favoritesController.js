@@ -135,6 +135,4 @@ favoritesController.deleteFavorites = async (req, res, next) => {
   }
 };
 
-
-
 module.exports = favoritesController;

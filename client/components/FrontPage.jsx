@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions';
-import { Link } from 'react-router-dom';
+import { Link, Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import WeatherView from './WeatherView.jsx';
 import NewsView from './NewsView.jsx';
 import ActivitiesView from './ActivitiesView.jsx';
+import FavoritesPage from './FavoritesPage.jsx';
+import DetailedWeather from './DetailedWeather.jsx';
 
 const mapDispatchToProps = dispatch => ({
   addCity(data) { dispatch(actions.addCity(data)) }
@@ -56,12 +58,16 @@ const Search = (props) => {
   }
 
   return (
+
     <div>
       <div className='hero-container'>
         <div className='top-container'>
           <Link to={'/login'} className='loginButton'>
             <button id='loginButton'>Login</button>
             {/* <Login /> */}
+          </Link>
+          <Link to={'/favorites'}>
+            <button id="favoritesButton">Favorites</button>
           </Link>
           <WeatherView city={props.city} />
         </div>
@@ -74,10 +80,24 @@ const Search = (props) => {
         </div>
       </div>
       <div className='main-content'>
-        <ActivitiesView city={props.city} />
-        <NewsView city={props.city} />
+        <Switch>
+          <Route path = {'/favorites'}>
+            <FavoritesPage />
+          </Route>
+
+          <Route exact path ={'/'}>
+            <ActivitiesView city={props.city} />
+            <NewsView city={props.city} />
+          </Route>
+
+          <Route path ={'/detailed-weather'}>
+            <DetailedWeather/>
+          </Route>
+
+        </Switch>
       </div>
     </div>
+
   );
 }
 

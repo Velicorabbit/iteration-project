@@ -70,7 +70,7 @@ module.exports = {
         target: 'http://localhost:5000',
         secure: false,
       },
-      '/auth/**': {
+      '/favorites/**': {
         target: 'http://localhost:5000',
         secure: false,
       },
