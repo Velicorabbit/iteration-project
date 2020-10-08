@@ -51,9 +51,15 @@ const ActivitiesView = (props) => {
           </div>
           <Card.Body>
             <Card.Title>{activitiesInfo.name}</Card.Title>
-            <Card.Text>Rating: {activitiesInfo.rating}</Card.Text>
-            <Card.Text>Reviews: {activitiesInfo.review}</Card.Text>
-            <Card.Text>Location: {activitiesInfo.location.address1}</Card.Text>
+            <Card.Text>
+              Rating: {activitiesInfo.rating}
+            </Card.Text>
+            <Card.Text>
+              Reviews: {activitiesInfo.review_count}
+            </Card.Text>
+            <Card.Text>
+              Location: {activitiesInfo.location.address1}
+            </Card.Text>
           </Card.Body>
           <Card.Footer>
             {/* change the value of whats going to go in here */}
