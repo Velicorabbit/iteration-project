@@ -70,6 +70,10 @@ module.exports = {
         target: 'http://localhost:5000',
         secure: false,
       },
+      '/auth/**': {
+        target: 'http://localhost:5000',
+        secure: false,
+      },
     },
   },
 };
