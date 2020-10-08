@@ -69,7 +69,7 @@ strong {
   display: flex;
   flex-direction: column;
   border: 1px solid black;
-  border-radius: 2%;
+  border-radius: 5px;
   box-shadow: 2px 2px #444444;
   margin: 5px;
   background-color: rgba(255, 255, 255, 0.8);
@@ -116,7 +116,7 @@ strong {
 
 .hero-container {
   background-image: url('https://www.developmentguild.com/assets/nyc-banner-night.jpg');
-  /* background-size: auto; */
+  /* background-size: contain; */
   display: flex;
   flex-direction: column;
   height: 120%;
@@ -204,14 +204,17 @@ form {
   padding-bottom: 4px;
   font-size: 13px;
   font-weight: bold;
-  background-color: Transparent;
+  background-color: rgba(255, 255, 255, 0.8);
   /* transition: color, background-color; */
+  border: none;
   border-radius: 5px;
+}
+.nav:focus {
+  outline: none;
 }
 
 .nav:hover {
-  color: white;
-  /* background-color: gray; */
+  text-decoration: underline;
 }
 
 .nav-container {
