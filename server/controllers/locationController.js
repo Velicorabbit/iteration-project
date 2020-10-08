@@ -13,6 +13,7 @@ locationController.getLocationData = (req, res, next) => {
   fetch(url)
     .then((data) => data.json())
     .then((locationData) => {
+      console.log("location data ", locationData.results[0]);
       const { address_components, geometry } = locationData.results[0];
       const { lat, lng } = geometry.location;
       res.locals.latitude = lat;

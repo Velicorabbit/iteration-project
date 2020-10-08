@@ -6,28 +6,25 @@ import Button from 'react-bootstrap/Button';
 import * as actions from '../actions/actions';
 
 const mapStateToProps = ({
-  informationReducer: { lat, long, countryCode },
-}) => ({ lat, long, countryCode });
+  informationReducer: { lat, long, countryCode, city },
+}) => ({ lat, long, countryCode, city });
 
 const ActivitiesView = (props) => {
+  useSelector(state => console.log('state at top ', state.informationReducer))
   const [activitiesData, setActivitiesData] = useState([]);
   const [fetchedData, setFetchedData] = useState(false);
   const [currentActivities, setCurrentActivities] = useState([]); // DISCUSS
   const userFavorites = useSelector(state => state.informationReducer.userFavorites, shallowEqual)
   const userEmail = useSelector(state => state.informationReducer.currentUser.Email, shallowEqual)
-  console.log('Top of page with userFavorites ', userFavorites)
-  console.log('Top of page with userEmail ', userEmail)
-  // const [userFavorite, setUserFavorite] = useState(false); 
+  const loggedIn = useSelector(state => state.informationReducer.isLoggedIn, shallowEqual)
   const dispatch = useDispatch()
-  //^^ CURRENTLY USER WILL BE DUMMY INFO,
 
   const countryCode = 'US';
   const DEFAULT_IMG = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80';
 
   const createActivities = (activitiesObject, category) => {
-    console.log('this is your activitiesObject: ', activitiesObject)
+    console.log('loggedIn', loggedIn)
     return activitiesObject.map((activitiesInfo, i) => {
-      console.log('value of id ', activitiesInfo.id)
       const renderStar = checkIfFavorite(activitiesInfo.id, userFavorites);
       return (
         <Card key={`activities-card-${i}`} className={'activity-card'} style={{ 'width': '400px' }}>
@@ -46,27 +43,27 @@ const ActivitiesView = (props) => {
               Location: {activitiesInfo.location.address1}
             </Card.Text>
           </Card.Body>
-          <Card.Footer>
-            {/* change the value of whats going to go in here */}
-            {/*  */}
-            {renderStar ? (
-              <img
-                onClick={(e) => {
-                  removeFavorite(e);
-                }}
-                src="https://www.flaticon.com/svg/static/icons/svg/148/148841.svg"
-                height="20px"
-                id={activitiesInfo.id}
-              ></img>
-            ) : (
-              <img
-                onClick={addFavorite}
-                src="https://www.flaticon.com/svg/static/icons/svg/149/149222.svg"
-                height="20px"
-                id={activitiesInfo.id}
-              ></img>
-            )}
-          </Card.Footer>
+          { loggedIn && 
+           <Card.Footer>
+              {renderStar ? (
+                <img
+                  onClick={(e) => {
+                    removeFavorite(e);
+                  }}
+                  src="https://www.flaticon.com/svg/static/icons/svg/148/148841.svg"
+                  height="20px"
+                  id={activitiesInfo.id}
+                ></img>
+              ) : (
+                <img
+                  onClick={addFavorite}
+                  src="https://www.flaticon.com/svg/static/icons/svg/149/149222.svg"
+                  height="20px"
+                  id={activitiesInfo.id}
+                ></img>
+              )}
+            </Card.Footer>
+          }
         </Card>
       );
     });
@@ -137,10 +134,8 @@ const ActivitiesView = (props) => {
         }).then(response => {
           return response.json()
         }).then(data => {
-          console.log('this is your data in addFavorites', data);
+          // console.log('this is your data in addFavorites', data);
           dispatch(actions.updateFavorites(data));
-        }).then(() => {
-          console.log('this is state in addFavorites after dispatch: ', userFavorites)
         })
       // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
       // setUserFavorite(true);
@@ -162,7 +157,7 @@ const removeFavorite = (e) => {
       response.json()
     }).then(userFavs => {
       // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
-      console.log(userFavs);
+      // console.log(userFavs);
       dispatch(actions.updateFavorites(userFavs));
     })
     .then(userFavs => {
@@ -191,7 +186,7 @@ const removeFavorite = (e) => {
 
   useEffect(()=> {
     fetchData();
-    console.log('in useEffect for userFavorites', userFavorites)
+    // console.log('in useEffect for userFavorites', userFavorites)
   }, [userFavorites]);
 
   if (!activitiesData) return null;
