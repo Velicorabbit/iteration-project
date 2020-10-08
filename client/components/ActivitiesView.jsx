@@ -40,7 +40,7 @@ const ActivitiesView = (props) => {
               Rating: {activitiesInfo.rating}
             </Card.Text>
             <Card.Text>
-              Reviews: {activitiesInfo.review}
+              Reviews: {activitiesInfo.review_count}
             </Card.Text>
             <Card.Text>
               Location: {activitiesInfo.location.address1}
