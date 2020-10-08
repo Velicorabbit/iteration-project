@@ -13,6 +13,10 @@ const FavoritesPage = () => {
   const user = useSelector((state) => state.informationReducer.currentUser);
   console.log('here are favorites', favorites);
 
+  useEffect(() => {
+    console.log('favorites component use effect', favorites);
+  }, []);
+
   const cards = favorites.map((el, idx) => {
     console.log('Favorite element information: ', el);
     return (
@@ -22,13 +26,14 @@ const FavoritesPage = () => {
         className="favorite-card"
       >
         <Card.Img variant="top" src={el.image_url} />
-        <Card.Header>{el.alias}</Card.Header>
+        <Card.Header>{el.name}</Card.Header>
         <Card.Body>
           <Card.Text>Address: {el.address1}</Card.Text>
           <Card.Text>City: {el.city}</Card.Text>
           <Card.Text>Zip: {el.zip_code}</Card.Text>
           <Card.Text>Review: {el.review_count}</Card.Text>
           <Card.Text>price: {el.price}</Card.Text>
+          {/* add display_phone if possible */}
         </Card.Body>
       </Card>
     );

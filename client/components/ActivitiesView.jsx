@@ -15,20 +15,21 @@ const ActivitiesView = (props) => {
   );
   const [activitiesData, setActivitiesData] = useState([]);
   const [fetchedData, setFetchedData] = useState(false);
-  const [currentActivities, setCurrentActivities] = useState([]); // DISCUSS
+  const [currentActivities, setCurrentActivities] = useState([]);
   const userFavorites = useSelector(
     (state) => state.informationReducer.userFavorites,
     shallowEqual
   );
+  const loggedIn = useSelector((state) => state.informationReducer.isLoggedIn);
   const userEmail = useSelector(
     (state) => state.informationReducer.currentUser.Email,
     shallowEqual
   );
-  const loggedIn = useSelector(
-    (state) => state.informationReducer.isLoggedIn,
-    shallowEqual
-  );
+  // console.log('Top of page with userFavorites ', userFavorites);
+  // console.log('Top of page with userEmail ', userEmail);
+  // const [userFavorite, setUserFavorite] = useState(false);
   const dispatch = useDispatch();
+  //^^ CURRENTLY USER WILL BE DUMMY INFO,
 
   const countryCode = 'US';
   const DEFAULT_IMG =
@@ -37,6 +38,7 @@ const ActivitiesView = (props) => {
   const createActivities = (activitiesObject, category) => {
     console.log('loggedIn', loggedIn);
     return activitiesObject.map((activitiesInfo, i) => {
+      console.log('value of id ', activitiesInfo);
       const renderStar = checkIfFavorite(activitiesInfo.id, userFavorites);
       return (
         <Card
@@ -54,30 +56,50 @@ const ActivitiesView = (props) => {
           <Card.Body>
             <Card.Title>{activitiesInfo.name}</Card.Title>
             <Card.Text>Rating: {activitiesInfo.rating}</Card.Text>
-            <Card.Text>Reviews: {activitiesInfo.review}</Card.Text>
+            <Card.Text>Reviews: {activitiesInfo.review_count}</Card.Text>
             <Card.Text>Location: {activitiesInfo.location.address1}</Card.Text>
           </Card.Body>
-          {loggedIn && (
-            <Card.Footer>
-              {renderStar ? (
-                <img
-                  onClick={(e) => {
-                    removeFavorite(e);
-                  }}
-                  src="https://www.flaticon.com/svg/static/icons/svg/148/148841.svg"
-                  height="20px"
-                  id={activitiesInfo.id}
-                ></img>
-              ) : (
-                <img
-                  onClick={addFavorite}
-                  src="https://www.flaticon.com/svg/static/icons/svg/149/149222.svg"
-                  height="20px"
-                  id={activitiesInfo.id}
-                ></img>
-              )}
-            </Card.Footer>
-          )}
+          <Card.Footer>
+            {/* change the value of whats going to go in here */}
+            {/*  */}
+            {renderStar ? (
+              <img
+                onClick={(e) => {
+                  removeFavorite(e);
+                }}
+                src="https://www.flaticon.com/svg/static/icons/svg/148/148841.svg"
+                height="20px"
+                id={activitiesInfo.id}
+                data-address1={activitiesInfo.location.address1}
+                data-name={activitiesInfo.name}
+                data-city={activitiesInfo.location.city}
+                data-zip_code={activitiesInfo.location.zip_code}
+                data-country={activitiesInfo.location.country}
+                data-review_count={activitiesInfo.review_count}
+                data-price={activitiesInfo.price}
+                data-image_url={activitiesInfo.image_url}
+                data-yelp_url={activitiesInfo.yelp_url}
+                // data-display_phone={activitiesInfo.display_phone}                      //ADD THE COLUMN TO THE DATABASE
+              ></img>
+            ) : (
+              <img
+                onClick={addFavorite}
+                src="https://www.flaticon.com/svg/static/icons/svg/149/149222.svg"
+                height="20px"
+                id={activitiesInfo.id}
+                data-address1={activitiesInfo.location.address1}
+                data-name={activitiesInfo.name}
+                data-city={activitiesInfo.location.city}
+                data-zip_code={activitiesInfo.location.zip_code}
+                data-country={activitiesInfo.location.country}
+                data-review_count={activitiesInfo.review_count}
+                data-price={activitiesInfo.price}
+                data-image_url={activitiesInfo.image_url}
+                data-yelp_url={activitiesInfo.yelp_url}
+                // data-display_phone={activitiesInfo.display_phone}                       //ADD THE COLUMN TO THE DATABASE
+              ></img>
+            )}
+          </Card.Footer>
         </Card>
       );
     });
@@ -118,7 +140,7 @@ const ActivitiesView = (props) => {
   // Grabs yelp rest. ID from the favorite icon's id and sends it backend to be added
   // to user favorites.
   const addFavorite = (e) => {
-    console.log('here is your favorite: ', e.target.id);
+    // console.log('here is your favorite address ******************: ', e.target.getAttribute("data-address1") )
     fetch(`/favorites/${userEmail}`, {
       method: 'POST',
       headers: {
@@ -126,17 +148,16 @@ const ActivitiesView = (props) => {
       },
       body: JSON.stringify({
         yelp_id: e.target.id,
-        // name: e.target.name,
-        // address1: e.target.name
-        // city:
-        // zip_code:
-        // country:
-        // review_count:
-        // price:
-        // category:
-        // alias:
-        // image_url:
-        // yelp_url:
+        address1: e.target.getAttribute('data-address1'),
+        name: e.target.getAttribute('data-name'),
+        city: e.target.getAttribute('data-city'),
+        zip_code: e.target.getAttribute('data-zip_code'),
+        country: e.target.getAttribute('data-country'),
+        review_count: e.target.getAttribute('data-review_count'),
+        price: e.target.getAttribute('data-price'),
+        image_url: e.target.getAttribute('data-image_url'),
+        yelp_url: e.target.getAttribute('data-yelp_url'),
+        // display_phone: e.target.getAttribute('data-display_phone'),                      //ADD THE COLUMN TO THE DATABASE
       }),
     })
       .then((response) => {
@@ -162,7 +183,7 @@ const ActivitiesView = (props) => {
   };
 
   const removeFavorite = (e) => {
-    console.log('Removing favorive: ', e.target.id);
+    console.log('Removing favorite: ', e.target.id);
     fetch(`/favorites/${userEmail}`, {
       method: 'DELETE',
       headers: {
@@ -172,6 +193,14 @@ const ActivitiesView = (props) => {
         yelp_id: e.target.id,
       }),
     })
+      .then((response) => {
+        response.json();
+      })
+      .then((userFavs) => {
+        // NEED TO FIGURE OUT WHAT WE NEED TO GRAB FROM DATA RETURNED
+        console.log(userFavs);
+        dispatch(actions.updateFavorites(userFavs));
+      })
       .then((response) => {
         response.json();
       })
