@@ -10,15 +10,14 @@ const FavoritesPage = () => {
     const favorites = useSelector(state => state.informationReducer.userFavorites);
     return favorites.map((el, idx) => {
        return (<Card key ={'favcards' + idx}>
-          <Card.Img variant="top" src={el.image_url} />
-          <Card.Header>{el.Name}</Card.Header>
+          <Card.Img variant="top" src={el.yelp_url} id ='favoriteCard'/>
+          <Card.Header>{el.alias}</Card.Header>
           <Card.Body>
             <Card.Text>
-              Address: {el.Address1}
-              HELLO this is favorites page
+              Address: {el.address1}
             </Card.Text>
             <Card.Text>
-              City: {el.City}
+              City: {el.city}
            </Card.Text>
            <Card.Text>
               Zip: {el.zip_code}

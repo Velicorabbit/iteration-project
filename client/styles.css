@@ -14,6 +14,11 @@
   margin: 50px 0px;
 }
 
+#favoriteCard {
+  max-width: 100%;
+  height: auto;
+}
+
 .item-wrapper {
   /* height: auto;
   width: auto; */
